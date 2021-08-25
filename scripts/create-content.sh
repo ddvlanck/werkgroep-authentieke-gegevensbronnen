@@ -80,5 +80,8 @@ else
   get_all_source_directories
 fi
 
+echo "Found following directories:"
+echo "${SOURCE_DIRECTORIES[@]}"
+
 expand_configuration_files
 

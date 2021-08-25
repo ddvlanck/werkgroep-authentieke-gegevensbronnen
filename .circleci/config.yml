@@ -20,7 +20,7 @@ jobs:
             - commit.json
   push-to-repository:
     docker:
-      - image: circleci/node
+      - image: circleci/python
     steps:
       - checkout
       - attach_workspace:
@@ -30,8 +30,12 @@ jobs:
           command: |
             git checkout website
       - run:
-          name: Test if this actually works
-          command: ls -l
+          name: Create content directory if it does not exist
+          command: |
+            [[ -d content ]] || mkdir content
+      - run:
+          name: Copying content to website folder 'content'
+          command: cp /tmp/workspace/bronnen/* content/
 workflows:
   version: 2
   create-and-copy-source-content:
