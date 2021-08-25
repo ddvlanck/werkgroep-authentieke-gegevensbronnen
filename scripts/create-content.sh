@@ -17,7 +17,7 @@ function expand_configuration_files () {
     local CONFIG_FILE=$(find $SOURCEDIR/$directory -type f -name "*.json")
     local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")   #TODO: add logic for when property 'naam' is not present --> take name of the directory
     local DESCRIPTION_FILE=$(find "$SOURCEDIR/$directory/beschrijving" -type f -name "*.md")
-    local NORMALIZED_SOURCE_NAME=$(echo $SOURCE_NAME | tr -dc '[:alnum:]\n\r ' | tr ' ' '-' | tr [:upper:] [:lower:])
+    local NORMALIZED_SOURCE_NAME=$(echo $SOURCE_NAME | tr -dc '[:alnum:]\n\r ' | tr ' ' '-' | tr [:upper:] [:lower:]) #Maybe we can just use the same name of the original directory
 
     mkdir -p "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME"
 
@@ -32,7 +32,7 @@ function expand_configuration_files () {
 
 
     cp "$CONFIG_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/$NORMALIZED_SOURCE_NAME.json"
-    cp "$DESCPRIPTION_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/description.md"
+    cp "$DESCRIPTION_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/description.md"
   done
 
   echo "Done expanding and copying configuration files."
