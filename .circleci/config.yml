@@ -18,23 +18,20 @@ jobs:
           paths:
             - bronnen/
             - commit.json
-    push-to-repository:
-      docker:
-        - image: circleci/node
-      steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - add_ssh_keys:
-            fingerprints:
-              - "TODO"
-        - run:
-            name: Switch to 'website' branch in repository
-            command: |
-              git checkout website
-        - run:
-            name: Test if this actually works
-            command: ls -l
+  push-to-repository:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Switch to 'website' branch in repository
+          command: |
+            git checkout website
+      - run:
+          name: Test if this actually works
+          command: ls -l
 workflows:
   version: 2
   create-and-copy-source-content:
