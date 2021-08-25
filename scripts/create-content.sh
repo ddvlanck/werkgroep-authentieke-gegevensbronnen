@@ -6,6 +6,7 @@
 
 # These function must be declared first, otherwise bash won't recognize them
 
+#TODO: add logic for when a certain file is not found
 function expand_configuration_files () {
   echo "Start expanding the configuration files"
 
@@ -54,8 +55,6 @@ function get_all_source_directories () {
   done
   
   SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
-  echo "Printing in function:"
-  echo ${SOURCE_DIRECTORIES[@]}
 }
 
 ###################
@@ -90,9 +89,6 @@ else
   echo "No previous commit hash was found. All directories will be processed."
   get_all_source_directories
 fi
-
-echo "Found following directories in global script:"
-echo "${SOURCE_DIRECTORIES[@]}"
 
 expand_configuration_files
 
