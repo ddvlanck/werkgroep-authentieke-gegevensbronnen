@@ -57,6 +57,8 @@ function get_all_source_directories () {
     SOURCE_DIRECTORIES+=("${path[1]}")
   done
 
+  echo "RESuLT"
+  echo ${SOURCE_DIRECTORIES[@]}
   declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
 }
 
@@ -81,7 +83,7 @@ if [ $? -eq 0 ]; then
   OTHER_FOLDERS_CHANGED="false"
   for file in $CHANGED_FILES
   do
-    [[ $file =~ bronnen\/[a-zA-Z/.]* ]] || (echo "Found a file that was added in other directory than 'bronnen'" && OTHER_FOLDERS_CHANGED="true")
+    [[ $file =~ bronnen\/[a-zA-Z/.]* ]] || { echo "Found a file that was added in other directory than 'bronnen'"; OTHER_FOLDERS_CHANGED="true"; }
   done
 
   echo "Other folders changed? ${OTHER_FOLDERS_CHANGED}"
