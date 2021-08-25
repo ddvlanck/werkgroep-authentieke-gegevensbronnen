@@ -11,7 +11,7 @@ function expand_configuration_files () {
 
   mkdir -p "$ROOTDIR/$SOURCEDIR"
 
-  for directory in $UNIQUE_SOURCE_DIRECTORIES
+  for directory in $SOURCE_DIRECTORIES
   do
     local CONFIG_FILE=$(find $SOURCEDIR/$directory -type f -name "*.json")
     local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")
@@ -33,28 +33,28 @@ function expand_configuration_files () {
 function get_changed_source_directories () {
   echo "Extracting only the directories that were changed."
 
-  local SOURCE_DIRECTORIES=()
+  local ALL_DIRECTORIES=()
   for file in $CHANGED_FILES
   do
     IFS='/ ' read -r -a path <<< "$file"
-    [[ ${path[0]} == 'bronnen' ]] && SOURCE_DIRECTORIES+=("${path[1]}")
+    [[ ${path[0]} == 'bronnen' ]] && ALL_DIRECTORIES+=("${path[1]}")
   done
 
-  declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
+  declare -a SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
 }
 
 function get_all_source_directories () {
   echo "Extracting all directories."
 
-  local SOURCE_DIRECTORIES=()
+  local ALL_DIRECTORIES=()
   for directory in $(ls -d bronnen/*)
   do
     IFS='/ ' read -r -a path <<< "$directory"
-    SOURCE_DIRECTORIES+=("${path[1]}")
+    ALL_DIRECTORIES+=("${path[1]}")
   done
-  declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
+  declare -a SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
   echo "Printing in function:"
-  echo ${UNIQUE_SOURCE_DIRECTORIES[@]}
+  echo ${SOURCE_DIRECTORIES[@]}
 }
 
 ###################
@@ -66,6 +66,8 @@ REPOSITORY_NAME=$2
 SOURCEDIR='bronnen'
 
 mkdir -p "$ROOTDIR"
+
+declare -a SOURCE_DIRECTORIES
 
 #TODO: change this function to use curl and fetch commit hash from git repository of website
 jq -n '{commit: "50c12dc7ed94a594de08db00ad75284d3db73eb7"}' > "$ROOTDIR/commit.json"
@@ -89,7 +91,7 @@ else
 fi
 
 echo "Found following directories in global script:"
-echo "${UNIQUE_SOURCE_DIRECTORIES[@]}"
+echo "${SOURCE_DIRECTORIES[@]}"
 
 expand_configuration_files
 
