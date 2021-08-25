@@ -32,19 +32,27 @@ function expand_configuration_files () {
 }
 
 function get_changed_source_directories () {
+  echo "Extracting only the directories that were changed."
+
   declare -a SOURCE_DIRECTORIES
   for file in $CHANGED_FILES
   do
     IFS='/ ' read -r -a path <<< "$file"
+    echo "$file"
+    echo "${path[1]}"
     SOURCE_DIRECTORIES+=("${path[1]}")
   done
 }
 
 function get_all_source_directories () {
+  echo "Extracting all directories."
+
   declare -a SOURCE_DIRECTORIES
   for directory in $(ls -d bronnen/*)
   do
     IFS='/ ' read -r -a path <<< "$directory"
+    echo "$directory"
+    echo "${path[1]}"
     SOURCE_DIRECTORIES+=("${path[1]}")
   done
 }
