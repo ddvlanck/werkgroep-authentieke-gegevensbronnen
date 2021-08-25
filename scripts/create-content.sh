@@ -40,7 +40,7 @@ function get_changed_source_directories () {
     [[ ${path[0]} == 'bronnen' ]] && ALL_DIRECTORIES+=("${path[1]}")
   done
 
-  declare -a SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
+  SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
 }
 
 function get_all_source_directories () {
@@ -52,7 +52,8 @@ function get_all_source_directories () {
     IFS='/ ' read -r -a path <<< "$directory"
     ALL_DIRECTORIES+=("${path[1]}")
   done
-  declare -a SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
+  
+  SOURCE_DIRECTORIES=($(printf "%s\n" "${ALL_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
   echo "Printing in function:"
   echo ${SOURCE_DIRECTORIES[@]}
 }
@@ -67,7 +68,7 @@ SOURCEDIR='bronnen'
 
 mkdir -p "$ROOTDIR"
 
-declare -a SOURCE_DIRECTORIES
+declare -ga SOURCE_DIRECTORIES
 
 #TODO: change this function to use curl and fetch commit hash from git repository of website
 jq -n '{commit: "50c12dc7ed94a594de08db00ad75284d3db73eb7"}' > "$ROOTDIR/commit.json"
