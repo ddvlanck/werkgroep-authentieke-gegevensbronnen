@@ -37,8 +37,6 @@ function get_changed_source_directories () {
   for file in $CHANGED_FILES
   do
     IFS='/ ' read -r -a path <<< "$file"
-    echo "$file"
-    echo "${path[1]}"
     [[ ${path[0]} == 'bronnen' ]] && SOURCE_DIRECTORIES+=("${path[1]}")
   done
 
@@ -52,14 +50,11 @@ function get_all_source_directories () {
   for directory in $(ls -d bronnen/*)
   do
     IFS='/ ' read -r -a path <<< "$directory"
-    echo "$directory"
-    echo "${path[1]}"
     SOURCE_DIRECTORIES+=("${path[1]}")
   done
-
-  echo "RESuLT"
-  echo ${SOURCE_DIRECTORIES[@]}
   declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
+  echo "Printing in function:"
+  echo ${UNIQUE_SOURCE_DIRECTORIES[@]}
 }
 
 ###################
@@ -86,8 +81,6 @@ if [ $? -eq 0 ]; then
     [[ $file =~ bronnen\/[a-zA-Z/.]* ]] || { echo "Found a file that was added in other directory than 'bronnen'"; OTHER_FOLDERS_CHANGED="true"; }
   done
 
-  echo "Other folders changed? ${OTHER_FOLDERS_CHANGED}"
-
   [[ $OTHER_FOLDERS_CHANGED == "true" ]] && get_all_source_directories || get_changed_source_directories
 
 else
@@ -95,7 +88,7 @@ else
   get_all_source_directories
 fi
 
-echo "Found following directories:"
+echo "Found following directories in global script:"
 echo "${UNIQUE_SOURCE_DIRECTORIES[@]}"
 
 expand_configuration_files
