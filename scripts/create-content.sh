@@ -21,7 +21,15 @@ function expand_configuration_files () {
 
     mkdir -p "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME"
 
+    echo "$CONFIG_FILE"
+    echo "$SOURCE_NAME"
+    echo "$DESCRIPTION_FILE"
+    echo "$NORMALIZED_SOURCE_NAME"
+    echo "============================"
+
     #TODO: expand document names in configuration file
+
+
 
     cp "$CONFIG_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/$NORMALIZED_SOURCE_NAME.json"
     cp "$DESCPRIPTION_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/description.md"
