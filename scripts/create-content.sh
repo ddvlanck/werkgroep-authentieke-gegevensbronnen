@@ -12,7 +12,7 @@ function expand_configuration_files () {
 
   mkdir -p "$ROOTDIR/$SOURCEDIR"
 
-  for directory in $SOURCE_DIRECTORIES
+  for directory in ${SOURCE_DIRECTORIES[@]}
   do
     local CONFIG_FILE=$(find $SOURCEDIR/$directory -type f -name "*.json")
     local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")   #TODO: add logic for when property 'naam' is not present --> take name of the directory
@@ -21,15 +21,7 @@ function expand_configuration_files () {
 
     mkdir -p "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME"
 
-    echo "$CONFIG_FILE"
-    echo "$SOURCE_NAME"
-    echo "$DESCRIPTION_FILE"
-    echo "$NORMALIZED_SOURCE_NAME"
-    echo "============================"
-
     #TODO: expand document names in configuration file
-
-
 
     cp "$CONFIG_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/$NORMALIZED_SOURCE_NAME.json"
     cp "$DESCRIPTION_FILE" "$ROOTDIR/$SOURCEDIR/$NORMALIZED_SOURCE_NAME/description.md"
