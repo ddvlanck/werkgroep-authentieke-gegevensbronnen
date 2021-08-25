@@ -32,3 +32,14 @@ jobs:
             name: Switch to 'website' branch in repository
             command: |
               git checkout website
+        - run:
+            name: Test if this actually works
+            command: ls -l
+workflows:
+  version: 2
+  create-and-copy-source-content:
+    jobs:
+      - create-content
+      - push-to-repository:
+          requires:
+            - create-content
