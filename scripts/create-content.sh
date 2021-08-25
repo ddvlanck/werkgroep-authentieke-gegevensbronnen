@@ -7,13 +7,11 @@
 # These function must be declared first, otherwise bash won't recognize them
 
 function expand_configuration_files () {
-  #TODO: iterate through all folders and their configuration files, expand them and copy them to another folder
-
   echo "Start expanding the configuration files"
 
   mkdir -p "$ROOTDIR/$SOURCEDIR"
 
-  for directory in $SOURCE_DIRECTORIES
+  for directory in $UNIQUE_SOURCE_DIRECTORIES
   do
     local CONFIG_FILE=$(find $SOURCEDIR/$directory -type f -name "*.json")
     local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")
@@ -31,23 +29,26 @@ function expand_configuration_files () {
   echo "Done expanding and copying configuration files."
 }
 
+# TODO: extract only directories in 'bronnen' and no duplicates
 function get_changed_source_directories () {
   echo "Extracting only the directories that were changed."
 
-  declare -a SOURCE_DIRECTORIES
+  local SOURCE_DIRECTORIES=()
   for file in $CHANGED_FILES
   do
     IFS='/ ' read -r -a path <<< "$file"
     echo "$file"
     echo "${path[1]}"
-    SOURCE_DIRECTORIES+=("${path[1]}")
+    [[ ${path[0]} == 'bronnen' ]] && SOURCE_DIRECTORIES+=("${path[1]}")
   done
+
+  declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
 }
 
 function get_all_source_directories () {
   echo "Extracting all directories."
 
-  declare -a SOURCE_DIRECTORIES
+  local SOURCE_DIRECTORIES=()
   for directory in $(ls -d bronnen/*)
   do
     IFS='/ ' read -r -a path <<< "$directory"
@@ -55,6 +56,8 @@ function get_all_source_directories () {
     echo "${path[1]}"
     SOURCE_DIRECTORIES+=("${path[1]}")
   done
+
+  declare -a UNIQUE_SOURCE_DIRECTORIES=($(printf "%s\n" "${SOURCE_DIRECTORIES[@]}" | sort -u | tr '\n' ' '))
 }
 
 ###################
@@ -81,7 +84,9 @@ if [ $? -eq 0 ]; then
     [[ $file =~ bronnen\/[a-zA-Z/.]* ]] || (echo "Found a file that was added in other directory than 'bronnen'" && OTHER_FOLDERS_CHANGED="true")
   done
 
-  [[ $OTHER_FOLDERS_CHANGED == true ]] && get_all_source_directories || get_changed_source_directories
+  echo "Other folders changed? ${OTHER_FOLDERS_CHANGED}"
+
+  [[ $OTHER_FOLDERS_CHANGED == "true" ]] && get_all_source_directories || get_changed_source_directories
 
 else
   echo "No previous commit hash was found. All directories will be processed."
@@ -89,7 +94,7 @@ else
 fi
 
 echo "Found following directories:"
-echo "${SOURCE_DIRECTORIES[@]}"
+echo "${UNIQUE_SOURCE_DIRECTORIES[@]}"
 
 expand_configuration_files
 
