@@ -15,7 +15,7 @@ function expand_configuration_files () {
   for directory in $SOURCE_DIRECTORIES
   do
     local CONFIG_FILE=$(find $SOURCEDIR/$directory -type f -name "*.json")
-    local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")
+    local SOURCE_NAME=$(jq -r .naam "$CONFIG_FILE")   #TODO: add logic for when property 'naam' is not present --> take name of the directory
     local DESCRIPTION_FILE=$(find "$SOURCEDIR/$directory/beschrijving" -type f -name "*.md")
     local NORMALIZED_SOURCE_NAME=$(echo $SOURCE_NAME | tr -dc '[:alnum:]\n\r ' | tr ' ' '-' | tr [:upper:] [:lower:])
 
