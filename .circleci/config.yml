@@ -25,6 +25,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - "31:ea:38:19:fd:57:91:d2:16:94:e1:6a:19:20:36:1c"
       - run:
           name: Switch to 'website' branch in repository
           command: |
