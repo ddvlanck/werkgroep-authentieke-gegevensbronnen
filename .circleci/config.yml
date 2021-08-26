@@ -40,8 +40,7 @@ jobs:
           name: Insert commit
           command: |
             export TAG=`echo "${CIRCLE_SHA1}"`
-#            echo "{\"commit\" : \"$TAG\"}" > /tmp/OSLO-StandaardenregisterGenerated/commit.json
-#TODO: insert commit in commit.json in branch register
+            echo "{\"commit\" : \"$TAG\"}" > commit.json
       - run:
           name: Push results to repository on branch 'register'
           command: |
@@ -52,7 +51,7 @@ jobs:
             git commit -m "Applying changes from commit ${CIRCLE_SHA1}" --allow-empty
             export TAG=`echo "${CIRCLE_SHA1}" | cut -c1-15`
             git tag "${TAG}"
-#            git push --force origin register
+            git push --force origin register
 workflows:
   version: 2
   create-and-copy-source-content:
