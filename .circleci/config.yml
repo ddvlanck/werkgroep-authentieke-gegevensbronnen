@@ -41,6 +41,6 @@ workflows:
   create-and-copy-source-content:
     jobs:
       - create-content
-      - push-to-repository
+      - push-to-repository:
           requires:
             - create-content
